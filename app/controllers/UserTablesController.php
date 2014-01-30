@@ -19,7 +19,8 @@ class UserTablesController extends BaseController {
         $data = array();
 
         // Stores the resultset data from the employees tables into the $search variable
-        $search = DB::select( DB::raw("SELECT userstable.UserID, userstable.FirstName, UsersTable.LastName FROM UsersTable WHERE FirstName + ' ' + LastName LIKE :value"), array(
+        $search = DB::select( DB::raw("SELECT userstable.UserID, userstable.FirstName, UsersTable.LastName 
+          FROM UsersTable WHERE FirstName + ' ' + LastName LIKE :value AND CompanyCode = 1"), array(
                      'value' => $term,
                    ));
 
@@ -47,10 +48,12 @@ class UserTablesController extends BaseController {
             $tsql = DB::table('UsersTable')
                          ->leftJoin('EmployeeAttendance', 'UsersTable.UserID', '=', 'EmployeeAttendance.UserId')
                          ->where('UsersTable.FirstName', '=', $name)
+                         ->where('CompanyCode', '=', '1')
                          ->first();
         } else {
             $tsql = DB::table('UsersTable')
                          ->leftJoin('EmployeeAttendance', 'UsersTable.UserID', '=', 'EmployeeAttendance.UserId')
+                         ->where('CompanyCode', '=', '1')
                          ->get();
         }
 
